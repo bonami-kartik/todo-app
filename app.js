@@ -18,22 +18,18 @@ addBtn.addEventListener('click', function () {
     inputTask.value = '';
 })
 
-
-clearBtnDiv.addEventListener('click', function () {
-    clearTasks();
-    console.log('Cleared')
-})
-
 function clearBtnRender() {
-    clearBtn = `<button type="button" class="btn btn-primary clear-btn">CLEAR TASKS</button>`
-    clearBtnDiv.innerHTML = clearBtn;
+    clearBtn = `<button type="button" onclick="clearTasks()" class="btn btn-primary clear-btn">CLEAR TASKS</button>`
+    clearBtnDiv.insertAdjacentHTML('beforeend', clearBtn);
     tasksContainer.insertAdjacentHTML('beforeend', clearBtn)
     console.log(clearBtnDiv.innerHTML)
-
 }
 
-console.log(clearBtnDiv.innerHTML)
+console.dir(clearBtnDiv)
 
+function hello() {
+    console.log("gitika");
+}
 function createTasks(arr) {
     let html = '';
     if (tasks.length == 1) {
@@ -44,8 +40,9 @@ function createTasks(arr) {
                 <li class="list-group-item">${arr[i]}</li>
             </ul>`
     
-    listEleDiv.innerHTML = html;
+    listEleDiv.insertAdjacentHTML('beforeend', html);
     tasks.length != 0 ? tasksContainer.insertAdjacentHTML('beforeend', html) : ''
+    console.log(listEleDiv)
 }
 
 function clearTasks() {
