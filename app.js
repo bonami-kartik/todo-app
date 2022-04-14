@@ -1,112 +1,124 @@
-'use strict'
+"use strict";
 
-const inputTask = document.querySelector('.task-input')
-const addBtn = document.querySelector('.add-btn');
-const tasksContainer = document.querySelector('.tasks-container')
-const tasksLists = document.querySelector('.tasks-list')
-const clearBtnEle = document.querySelector('.clearBtn')
-let tasks = [], html = '';
+const inputTask = document.querySelector(".task-input");
+const addBtn = document.querySelector(".add-btn");
+const tasksContainer = document.querySelector(".tasks-container");
+const tasksLists = document.querySelector(".list-group");
+const clearBtnEle = document.querySelector(".clearBtn");
+let tasks = ["sadasd", "asdsad", "sadasd"];
+let html = "";
 let clearBtn;
-let clearBtnDiv = document.createElement('div');
-let listEleDiv = document.createElement('div');
+let clearBtnDiv = document.createElement("div");
+let listEleDiv = document.createElement("div");
 
-console.dir(inputTask.value)
+console.dir(inputTask.value);
 console.log(addBtn);
 
-addBtn.addEventListener('click', function () {
-    console.log(inputTask.value)
-    tasks.push(inputTask.value);
-    createTasks(tasks)
-    inputTask.value = '';
-})
+addBtn.addEventListener("click", function () {
+  console.log(inputTask.value);
+  tasks.push(inputTask.value);
+  createTasks(inputTask.value);
+  inputTask.value = "";
+});
+
+window.addEventListener("load", (event) => {
+  //   createTasks(tasks);
+  let firstlist = [];
+  tasks.forEach((ele, i) => {
+    firstlist += `<li class="list-group-item" data-key="${i + 1}">
+    <input id="${i + 1}" value="${ele}" onchange="editTaskArr(event, ${
+      i + 1
+    })" type="text" disabled style="background-color: #fff; border: none; width: 100%"/>
+        <i class="fa-solid fa-pen-to-square edit-task" onclick="editTask(event,${
+          i + 1
+        })"></i>
+    </li>`;
+  });
+
+  if (tasks.length > 0 && !clearBtnEle.hasChildNodes()) {
+    clearBtnRender();
+  }
+
+  tasksLists.innerHTML = firstlist;
+});
 
 function clearBtnRender() {
-    clearBtn = `<button type="button" onclick="clearTasks()" class="btn btn-primary clear-btn">CLEAR TASKS</button>`
-    clearBtnDiv.insertAdjacentHTML('beforeend', clearBtn);
-    clearBtnEle.insertAdjacentHTML('beforeend', clearBtn)
-    console.log(clearBtnDiv.innerHTML)
+  clearBtn = `<button type="button" onclick="clearTasks()" class="btn btn-primary clear-btn">CLEAR TASKS</button>`;
+  clearBtnDiv.insertAdjacentHTML("beforeend", clearBtn);
+  clearBtnEle.insertAdjacentHTML("beforeend", clearBtn);
+  console.log(clearBtnDiv.innerHTML);
 }
 
 function clearBtnRemove() {
-    clearBtn = ''
-    clearBtnEle.innerHTML = ''
-    console.log('clearbtn removed')
+  clearBtn = "";
+  clearBtnEle.innerHTML = "";
 }
-
-console.dir(clearBtnDiv)
-
-function giveEditField() {
-    let editInput = '';
-    editInput = `<input type="text" />`
-}
-
-// function changeTask() {
-//     let newTask = prompt('Make a Edit');
-//     tasks.splice(i, 1, newTask)
-//     // createTasks();
-// }
 
 function tasksToDoContainer() {
-    let html = '';
-    html = `<h3>Tasks</h3>
+  let html = "";
+  html = `<h3>Tasks</h3>
             <div class="input-group mb-3 tasks-list">
                 <input type="text" class="form-control task-input" placeholder="Filter Tasks" aria-label="Username" aria-describedby="basic-addon1" onchange="filterTasks(e)">
-            </div>`
-    
+            </div>`;
 }
-function editTask() {
-    tasksLists.children[0].children[0].addEventListener('click', function(e) {
-        e.path[1].contentEditable = true;
-        // e.path[1].style.backgroundColor = '#c5c5c5'
-
-        console.log(e)
-
-        e.path[4].onclick = console.log('body clicked')
-
-        // window.addEventListener('click', function (e) {
-        //     e.path[1].contentEditable = false;
-        //     e.path[1].style.backgroundColor = '#fff'
-        // })
-    })
+function editTask(e) {
+  e.path[1].style.backgroundColor = "#c5c5c5";
+  e.target.offsetParent.childNodes[1].disabled = false;
 }
 
-function createTasks(arr) {
-    if (arr == []) console.log('chal ja bhai');
-    if (tasks.length == 1) {
-        clearBtnRender();
-    }
-    for (let i = 0; i < arr.length; i++)  
-    html = `<ul class="list-group" data-key=${i+1}>
-                <li class="list-group-item" data-key="${i+1}">
-                    ${arr[i]}
-                    <i class="fa-solid fa-pen-to-square edit-task" onclick="editTask()"></i>
+function createTasks(ele) {
+  if (tasks.length > 0 && !clearBtnEle.hasChildNodes()) {
+    clearBtnRender();
+  }
+  let html_li = `<li class="list-group-item" data-key="${tasks.length}">
+                    <input id="${tasks.length}" value="${ele}" onchange="editTaskArr(event)" type="text" disabled style="background-color: white; border: none; width: 100%"/>
+                    <i class="fa-solid fa-pen-to-square edit-task" onclick="editTask(event,${tasks.length})"></i>
                 </li>
-            </ul>`
-    // listEleDiv.insertAdjacentHTML('beforeend', html);
-    tasksLists.innerHTML += html;
-    // tasks.length != 0 ? tasksLists.insertAdjacentHTML('beforeend', html) : ''
-    console.dir(tasksLists)
-}
+                `;
 
-// function editTask(e) {
-//     e.target.contentEditable = true;
-//     e.target.backgroundColor = '#bbbbbb'
-//     console.log(e)
-// }
+  tasksLists.innerHTML += html_li;
+}
 
 function clearTasks() {
-    tasks = [];
-    html = '';
-    tasksLists.innerHTML = html;
-    clearBtnRemove();
-    // createTasks(tasks);
-    console.log('Cleared')
+  tasks = [];
+  tasksLists.innerHTML = "";
+  clearBtnRemove();
+}
+
+function editTaskArr(e) {
+  tasks[e.target.id - 1] = e.target.value;
+  e.target.disabled = true;
+  e.path[1].style.backgroundColor = "#fff";
+}
+
+function renderFilterTasks(filterArr) {
+  console.log(filterArr);
+  let html = "";
+  filterArr.forEach((ele, i) => {
+    html += `<li class="list-group-item" data-key="${i + 1}">
+                            <input id="${
+                              i + 1
+                            }" value="${ele}" onchange="editTaskArr(event, ${
+      i + 1
+    })" type="text" disabled style="background-color: #fff; border: none; width: 100%"/>
+                            <i class="fa-solid fa-pen-to-square edit-task" onclick="editTask(event,${
+                              i + 1
+                            })"></i>
+                        </li>`;
+  });
+
+  tasksLists.innerHTML = html;
 }
 
 function filterTasks(e) {
-    const filterTasksArr = tasks.filter((e) => {
-        return e.target.value
-    })
-    // createTasks(filterTasksArr)
-    console.log(e.target.value)
+  console.log(e);
+  let filterTasksArr = tasks.filter((task) => {
+    return task.startsWith(e.target.value);
+  });
+  console.log(filterTasksArr, e.target.value);
+  renderFilterTasks(filterTasksArr);
+}
+
+function hello(e) {
+  console.log(e.target.value);
 }
